@@ -2,11 +2,12 @@ import Navbar from "./components/Navbar";
 import CartContainer from "./components/CartContainer";
 import Modal from "./components/Modal";
 import { useSelector, useDispatch } from "react-redux";
-import { calculateTotals } from "./features/cart/cartSlice";
+import { calculateTotals, getCartItems } from "./features/cart/cartSlice";
 import { useEffect } from "react";
+import { MoonLoader } from "react-spinners";
 
 function App() {
-  const { cartItems } = useSelector((state) => state.cart);
+  const { cartItems, isLoading } = useSelector((state) => state.cart);
   const { isOpen } = useSelector((state) => state.modal);
 
   const dispatch = useDispatch();
@@ -14,6 +15,25 @@ function App() {
   useEffect(() => {
     dispatch(calculateTotals());
   }, [cartItems]);
+
+  useEffect(() => {
+    dispatch(getCartItems());
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          minHeight: "100dvh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <MoonLoader />
+      </div>
+    );
+  }
 
   return (
     <main>
